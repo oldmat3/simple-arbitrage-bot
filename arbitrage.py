@@ -10,7 +10,7 @@ API_KEY = 'a7e94ee7dc68924cdb7e30eb126d5ebe'
 
 SPORT = 'upcoming' # use the sport_key from the /sports endpoint below, or use 'upcoming' to see the next 8 games across all sports
 
-REGIONS = 'us' # uk | us | eu | au. Multiple can be specified if comma delimited
+REGIONS = 'au' # uk | us | eu | au. Multiple can be specified if comma delimited
 
 MARKETS = 'h2h' # h2h | spreads | totals. Multiple can be specified if comma delimited
 
@@ -142,19 +142,20 @@ my_columns = ['ID', 'Sport Key', 'Expected Earnings'] + list(np.array([[f'Bookma
 dataframe = pd.DataFrame(columns=my_columns)
 
 for event in arbitrage_events:
-    # print(event.best_odds)
-    row = []
-    row.append(event.id)
-    row.append(event.sport_key)
-    row.append(round(event.expected_earnings, 2))
-    for index, outcome in enumerate(event.best_odds):
-        row.append(outcome[BOOKMAKER_INDEX])
-        row.append(outcome[NAME_INDEX])
-        row.append(outcome[ODDS_INDEX])
-        row.append(event.bet_amounts[index])
-    while len(row) < len(dataframe.columns):
-        row.append('N/A')
-    dataframe.loc[len(dataframe.index)] = row
+    # Check if estimated earnings are greater than $1
+    if event.expected_earnings > 1:
+        row = []
+        row.append(event.id)
+        row.append(event.sport_key)
+        row.append(round(event.expected_earnings, 2))
+        for index, outcome in enumerate(event.best_odds):
+            row.append(outcome[BOOKMAKER_INDEX])
+            row.append(outcome[NAME_INDEX])
+            row.append(outcome[ODDS_INDEX])
+            row.append(event.bet_amounts[index])
+        while len(row) < len(dataframe.columns):
+            row.append('N/A')
+        dataframe.loc[len(dataframe.index)] = row
 
 writer = pd.ExcelWriter('bets.xlsx')
 dataframe.to_excel(writer, index=False)
