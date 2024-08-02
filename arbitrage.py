@@ -6,7 +6,7 @@ import openpyxl
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Border, Side, Font, Alignment, PatternFill, numbers
 
-API_KEY = 'a7e94ee7dc68924cdb7e30eb126d5ebe'
+API_KEY = ''
 
 SPORT = 'upcoming' # use the sport_key from the /sports endpoint below, or use 'upcoming' to see the next 8 games across all sports
 
@@ -23,7 +23,7 @@ BET_SIZE = 100
 odds_response = requests.get(
     f'https://api.the-odds-api.com/v4/sports/{SPORT}/odds',
     params={
-        'api_key': 'a7e94ee7dc68924cdb7e30eb126d5ebe',
+        'api_key': '',
         'regions': REGIONS,
         'markets': MARKETS,
         'oddsFormat': ODDS_FORMAT,
